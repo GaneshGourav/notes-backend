@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken");
 const { BlackModel } = require("../models/blacklistModel");
+require("dotenv").config();
 
 const auth = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     let black = await BlackModel.findOne({ token: token });
     if (!black) {
-      jwt.verify(token, "manikant", (err, decoded) => {
+      jwt.verify(token, process.env.SECERETKEY, (err, decoded) => {
         if (decoded) {
           req.body = {
             ...req.body,
